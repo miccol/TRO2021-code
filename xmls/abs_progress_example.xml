@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Parallel threshold="2">
+            <Decorator ID="AbsoluteProgressSync">
+                <Action ID="SmoothAction"/>
+            </Decorator>
+            <Decorator ID="AbsoluteProgressSync">
+                <Action ID="SmoothAction"/>
+            </Decorator>
+        </Parallel>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Decorator ID="AbsoluteProgressSync">
+        </Decorator>
+        <Decorator ID="RelativeProgressSync">
+        </Decorator>
+        <Decorator ID="ResourceSync">
+        </Decorator>
+        <Action ID="SmoothAction">
+        </Action>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+
