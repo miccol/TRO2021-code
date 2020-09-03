@@ -1,7 +1,7 @@
-# Simulated Experiments for the paper: Handing Concurrency in Behavior Trees
+# Simulated Experiments for the paper: Handing Concurrencies in Behavior Trees
 
 In this repository, you will find the code related to the examples and experiments of the paper: <br>
-"Handling Concurrency in Behavior Trees" <br>
+"Handling Concurrencies in Behavior Trees" <br>
 Submitted at Transactions on Robotics by Michele Colledanchise and Lorenzo Natale.
 
 ## Dependencies
