@@ -36,7 +36,6 @@
 #include <random>
 
 using namespace BT;
-using namespace std;
 QT_CHARTS_USE_NAMESPACE
 
 class PseudoRandom : public SyncSmoothAction {
@@ -89,11 +88,10 @@ double run_relative_barriers(RelativeBarrier barrier, double a1, double w_max1,
 
   parallel.addChild(&dec1);
   parallel.addChild(&dec2);
-
   NodeStatus status = NodeStatus::RUNNING;
 
-  QLineSeries *series_1 = new QLineSeries();
-  series_1->setName(action_1.name().c_str());
+ // QLineSeries *series_1 = new QLineSeries();
+  //series_1->setName(action_1.name().c_str());
 
   QLineSeries *series_2 = new QLineSeries();
   series_2->setName(action_2.name().c_str());
@@ -101,17 +99,17 @@ double run_relative_barriers(RelativeBarrier barrier, double a1, double w_max1,
   action_1.set_progress(0.0);
   action_2.set_progress(0.0);
 
-  vector<QLineSeries *> data = {series_1, series_2};
+  //vector<QLineSeries *> data = {series_1, series_2};
   int i = 0;
   double diff = 0.0;
   while (action_1.progress() < 1 || action_2.progress() < 1) {
 
-    diff = diff + abs(action_1.progress() - action_2.progress()) / 2.0;
+    diff = diff + abs(action_1.progress() - action_2.progress());
     status = parallel.executeTick();
     i++;
   }
-  series_1->append(i, action_1.progress());
-  series_2->append(i, action_2.progress());
+  //series_1->append(i, action_1.progress());
+  //series_2->append(i, action_2.progress());
 
   parallel.halt();
   return diff;
@@ -167,12 +165,12 @@ int main(int argc, char *argv[]) {
   sync_series_5->setName("Disturbance 5%");
   sync_series_20->setName("Disturbance 2%");
 
-  std::vector<double> average_results;
+  //std::vector<double> average_results;
 
   float plot_pos = 0.5;
   for (double x : delta_values) {
 
-    cout << "Computing values for Delata = " << x << endl;
+    cout << "Computing values for Delta = " << x << endl;
 
     RelativeBarrier barrier(x);
 
@@ -235,9 +233,9 @@ int main(int argc, char *argv[]) {
       average = average + result;
     }
 
-    average = average / x;
+    //average = average / x;
 
-    average_results.push_back(average);
+    //average_results.push_back(average);
     std::sort(sortedList.begin(), sortedList.end());
     int count = sortedList.count();
     qreal median = findMedian(sortedList, 0, count);
