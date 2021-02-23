@@ -40,7 +40,6 @@ set(PROJECT_SRC
     "src/absolute_barrier.cpp"
     "src/relative_barrier.cpp"
     "src/sync_smooth_action.cpp"
-    "src/async_smooth_action.cpp"
     "src/resource_handler.cpp"
     )
 
@@ -68,6 +67,9 @@ target_link_libraries(Experiment1 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets
 add_executable(Experiment2 experiments/analysis_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment2 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
+add_executable(Experiment2bis experiments/analysis_number_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment2bis BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
 add_executable(Experiment3 experiments/analysis_predictability.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment3 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
@@ -76,4 +78,3 @@ target_link_libraries(Experiment4 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets
 
 add_executable(Experiment5 examples/fair_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment5 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
-
