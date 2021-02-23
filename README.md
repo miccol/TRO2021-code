@@ -9,6 +9,8 @@ Submitted at Transactions on Robotics by Michele Colledanchise and Lorenzo Natal
 [BehaviorTree.CPP](https://github.com/BehaviorTree/BehaviorTree.CPP)
 
 [Qt5](https://doc.qt.io/qt-5/gettingstarted.html)
+(You may need to install Qt5Charts separately by running: `sudo apt install libqt5charts5-dev)
+
 
 [Groot](https://github.com/BehaviorTree/Groot) (optional)
 
