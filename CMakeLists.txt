@@ -64,6 +64,9 @@ target_link_libraries(Example5 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt
 add_executable(Experiment1 experiments/analysis_absolute.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment1 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
+add_executable(Experiment1bis experiments/analysis_number_absolute.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment1bis BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
 add_executable(Experiment2 experiments/analysis_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment2 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
@@ -72,6 +75,7 @@ target_link_libraries(Experiment2bis BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widg
 
 add_executable(Experiment3 experiments/analysis_predictability.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment3 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
 
 add_executable(Experiment4 examples/greedy_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment4 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)

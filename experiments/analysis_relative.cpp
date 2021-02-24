@@ -112,7 +112,7 @@ double run_relative_barriers(RelativeBarrier barrier, double a1, double w_max1,
   //series_2->append(i, action_2.progress());
 
   parallel.halt();
-  return diff;
+  return diff/i;
 }
 
 double run_async(double a1, double w_max1, double a2, double w_max2) {

@@ -115,7 +115,8 @@ double run_absolute_barriers(AbsoluteBarrier barrier, double a1, double w_max1,
   series_2->append(i, action_2.progress());
 
   parallel.halt();
-  return diff;
+  std::cout << "i: " << i <<std::endl;
+  return diff/i;
 }
 
 double run_async(double a1, double w_max1, double a2, double w_max2) {
@@ -144,7 +145,7 @@ double run_async(double a1, double w_max1, double a2, double w_max2) {
   double diff = 0.0;
   while (action_1.progress() < 1 || action_2.progress() < 1) {
 
-    diff = diff + abs(action_1.progress() - action_2.progress()) / 2.0;
+    diff = diff + abs(action_1.progress() - action_2.progress());
     status = parallel.executeTick();
     i++;
   }
@@ -152,7 +153,8 @@ double run_async(double a1, double w_max1, double a2, double w_max2) {
   series_2->append(i, action_2.progress());
 
   parallel.halt();
-  return diff;
+  std::cout << "i: " << i <<std::endl;
+  return diff/i;
 }
 
 int main(int argc, char *argv[]) {
