@@ -64,21 +64,21 @@ target_link_libraries(Example5 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt
 add_executable(Experiment1 experiments/analysis_absolute.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment1 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
-add_executable(Experiment1bis experiments/analysis_number_absolute.cpp ${PROJECT_SRC} ${PLOT_SRC})
-target_link_libraries(Experiment1bis BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
-
 add_executable(Experiment2 experiments/analysis_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment2 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
 
-add_executable(Experiment2bis experiments/analysis_number_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
-target_link_libraries(Experiment2bis BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
-
-add_executable(Experiment3 experiments/analysis_predictability.cpp ${PROJECT_SRC} ${PLOT_SRC})
-target_link_libraries(Experiment3 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
-
-
-add_executable(Experiment4 examples/greedy_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
-target_link_libraries(Experiment4 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
-
-add_executable(Experiment5 examples/fair_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
+add_executable(Experiment5 experiments/analysis_number_absolute.cpp ${PROJECT_SRC} ${PLOT_SRC})
 target_link_libraries(Experiment5 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
+add_executable(Experiment6 experiments/analysis_number_relative.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment6 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
+add_executable(Experiment7 experiments/analysis_predictability.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment7 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
+add_executable(Experiment8 examples/greedy_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment8 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
+add_executable(Experiment9 examples/fair_philosophers.cpp ${PROJECT_SRC} ${PLOT_SRC})
+target_link_libraries(Experiment9 BT::behaviortree_cpp_v3 Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Charts)
+
