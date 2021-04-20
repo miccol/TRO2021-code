@@ -4,7 +4,7 @@ In this repository, you will find the code related to the examples and experimen
 "Handling Concurrency in Behavior Trees" <br>
 Submitted at Transactions on Robotics by Michele Colledanchise and Lorenzo Natale.
 
-**Note** To run the alternative methods used in the comparative experiments, check the related readmes in the folder `comparisons`
+**Note:** To run the alternative methods used in the comparative experiments, check the related readmes in the folder `comparisons`
 ## Dependencies
 
 [BehaviorTree.CPP](https://github.com/BehaviorTree/BehaviorTree.CPP)
