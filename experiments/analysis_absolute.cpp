@@ -115,7 +115,6 @@ double run_absolute_barriers(AbsoluteBarrier barrier, double a1, double w_max1,
   series_2->append(i, action_2.progress());
 
   parallel.halt();
-  std::cout << "i: " << i <<std::endl;
   return diff/i;
 }
 
@@ -153,7 +152,6 @@ double run_async(double a1, double w_max1, double a2, double w_max2) {
   series_2->append(i, action_2.progress());
 
   parallel.halt();
-  std::cout << "i: " << i <<std::endl;
   return diff/i;
 }
 
@@ -217,7 +215,7 @@ int main(int argc, char *argv[]) {
     QBoxSet *box_sync_5 = new QBoxSet(to_string(x).c_str());
     QBoxSet *box_sync_20 = new QBoxSet(to_string(x).c_str());
 
-    while (episode++ < 1000) {
+    while (episode++ < 10000) {
       a1 = 0.03;
       a2 = 0.02;
 
@@ -251,13 +249,17 @@ int main(int argc, char *argv[]) {
     qreal median = findMedian(sortedList, 0, count);
     qreal Q1 = findMedian(sortedList, 0, count / 2);
     qreal Q3 = findMedian(sortedList, count / 2 + (count % 2), count);
-    qreal IQR = Q3 - Q1;
+    qreal UE = Q3 + 1.5 * (Q3 - Q1);
+    qreal LE = sortedList.first();
 
     box_sync->setValue(QBoxSet::Median, median);
     box_sync->setValue(QBoxSet::LowerQuartile, Q1);
     box_sync->setValue(QBoxSet::UpperQuartile, Q3);
-    box_sync->setValue(QBoxSet::LowerExtreme, sortedList.first());
-    box_sync->setValue(QBoxSet::UpperExtreme, Q3 + 1.5 * IQR);
+    box_sync->setValue(QBoxSet::LowerExtreme, LE);
+    box_sync->setValue(QBoxSet::UpperExtreme, UE);
+
+
+
 
     plot_pos = plot_pos + 0.5;
 
@@ -267,12 +269,15 @@ int main(int argc, char *argv[]) {
     qreal median_5 = findMedian(sortedList_5, 0, count_5);
     qreal Q1_5 = findMedian(sortedList_5, 0, count_5 / 2);
     qreal Q3_5 = findMedian(sortedList_5, count_5 / 2 + (count_5 % 2), count_5);
-    qreal IQR_5 = Q3_5 - Q1_5;
+    qreal UE_5 = Q3_5 + 1.5 * (Q3_5 - Q1_5);
+    qreal LE_5 = sortedList_5.first();
+
+
     box_sync_5->setValue(QBoxSet::Median, median_5);
     box_sync_5->setValue(QBoxSet::LowerQuartile, Q1_5);
     box_sync_5->setValue(QBoxSet::UpperQuartile, Q3_5);
-    box_sync_5->setValue(QBoxSet::LowerExtreme, sortedList_5.first());
-    box_sync_5->setValue(QBoxSet::UpperExtreme, Q3_5 + 1.5 * IQR_5);
+    box_sync_5->setValue(QBoxSet::LowerExtreme, LE_5);
+    box_sync_5->setValue(QBoxSet::UpperExtreme, UE_5);
 
     plot_pos = plot_pos + 0.5;
 
@@ -283,17 +288,49 @@ int main(int argc, char *argv[]) {
     qreal Q1_20 = findMedian(sortedList_20, 0, count_20 / 2);
     qreal Q3_20 =
         findMedian(sortedList_20, count_20 / 2 + (count_20 % 2), count_20);
-    qreal IQR_20 = Q3_20 - Q1_20;
+    qreal UE_20 = Q3_20 + 1.5 * (Q3_20 - Q1_20);
+    qreal LE_20 = sortedList_20.first();
+
+
     box_sync_20->setValue(QBoxSet::Median, median_20);
     box_sync_20->setValue(QBoxSet::LowerQuartile, Q1_20);
     box_sync_20->setValue(QBoxSet::UpperQuartile, Q3_20);
-    box_sync_20->setValue(QBoxSet::LowerExtreme, sortedList_20.first());
-    box_sync_20->setValue(QBoxSet::UpperExtreme, Q3_20 + 1.5 * IQR_20);
+    box_sync_20->setValue(QBoxSet::LowerExtreme, LE_20);
+    box_sync_20->setValue(QBoxSet::UpperExtreme, UE_20);
 
     plot_pos = plot_pos + 1.0;
     sync_series->append(box_sync);
     sync_series_5->append(box_sync_5);
     sync_series_20->append(box_sync_20);
+
+
+    cout << "Disturbance 10%" << endl;
+    cout << "LowerExtreme:" << LE<< endl;
+    cout << "LowerQuartile:" << Q1  << endl;
+    cout << "Median:" << median << endl;
+    cout << "UpperQuartile:" << Q3 << endl;
+    cout << "UpperExtreme:" << UE  << endl;
+
+    cout << "-------------" << endl;
+
+    cout << "Disturbance 5%" << endl;
+    cout << "LowerExtreme:" << LE_5<< endl;
+    cout << "LowerQuartile:" << Q1_5  << endl;
+    cout << "Median:" << median_5 << endl;
+    cout << "UpperQuartile:" << Q3_5 << endl;
+    cout << "UpperExtreme:" << UE_5  << endl;
+    cout << "-------------" << endl;
+    cout << "Disturbance 2%" << endl;
+    cout << "LowerExtreme:" << LE_20<< endl;
+    cout << "LowerQuartile:" << Q1_20  << endl;
+    cout << "Median:" << median_20 << endl;
+    cout << "UpperQuartile:" << Q3_20 << endl;
+    cout << "UpperExtreme:" << UE_20  << endl;
+    cout << "-------------" << endl;
+    cout << "-------------" << endl;
+
+
+
   }
   QChart *chart = new QChart();
 

@@ -41,15 +41,19 @@ QT_CHARTS_USE_NAMESPACE
 class PseudoRandom : public SyncSmoothAction {
 public:
   PseudoRandom(std::string name, double a, double w_max)
-      : SyncSmoothAction(name, 0, 0), w_max_(w_max), a_(a) {}
+      : SyncSmoothAction(name, 0, 0), w_max_(w_max), a_(a) {
+      std::random_device
+          rd; // Will be used to obtain a seed for the random number engine
+      std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+      std::uniform_real_distribution<> dis(-w_max_, w_max_);
+      double disturbance = dis(gen);
+      progress_increment = a_ + disturbance;
+  }
   NodeStatus tick() override {
-    std::random_device
-        rd; // Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<> dis(-w_max_, w_max_);
 
-    double disturbance = dis(gen);
-    double progress_increment = a_ + disturbance;
+
+
+    std::this_thread::sleep_for (std::chrono::milliseconds(10));
 
     set_progress(max(min(progress() + progress_increment, 1.0), 0.0));
 
@@ -59,6 +63,7 @@ public:
 private:
   double w_max_;
   double a_;
+  double progress_increment;
 };
 
 qreal findMedian(QList<qreal> sortedList, int begin, int end) {
@@ -103,7 +108,6 @@ double run_relative_barriers(RelativeBarrier barrier, double a1, double w_max1,
   int i = 0;
   double diff = 0.0;
   while (action_1.progress() < 1 || action_2.progress() < 1) {
-
     diff = diff + abs(action_1.progress() - action_2.progress());
     status = parallel.executeTick();
     i++;
@@ -166,6 +170,8 @@ int main(int argc, char *argv[]) {
   sync_series_20->setName("Disturbance 2%");
 
   //std::vector<double> average_results;
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
   float plot_pos = 0.5;
   for (double x : delta_values) {
@@ -205,26 +211,38 @@ int main(int argc, char *argv[]) {
     QBoxSet *box_sync_5 = new QBoxSet(to_string(x).c_str());
     QBoxSet *box_sync_20 = new QBoxSet(to_string(x).c_str());
 
-    while (episode++ < 1000) {
+    while (episode++ < 10) {
       a1 = 0.03;
       a2 = 0.02;
 
       w_max1 = a1 / 2.0;
       w_max2 = a2 / 2.0;
 
+
+      begin = std::chrono::steady_clock::now();
       result = run_relative_barriers(barrier, a1, w_max1, a2, w_max2);
+      end = std::chrono::steady_clock::now();
+      std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "," << std::endl;
 
       w_max1 = a1 / 5.0;
       w_max2 = a2 / 5.0;
+     // begin = std::chrono::steady_clock::now();
+  //    result_5 = run_relative_barriers(barrier, a1, w_max1, a2, w_max2);
+   //   end = std::chrono::steady_clock::now();
 
-      result_5 = run_relative_barriers(barrier, a1, w_max1, a2, w_max2);
+    //  std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "," << std::endl;
       w_max1 = 0.0006;
       w_max2 = 0.0008;
 
       w_max1 = a1 / 10.0;
       w_max2 = a2 / 10.0;
 
-      result_20 = run_relative_barriers(barrier, a1, w_max1, a2, w_max2);
+   //   begin = std::chrono::steady_clock::now();
+  //    result_20 = run_relative_barriers(barrier, a1, w_max1, a2, w_max2);
+     // end = std::chrono::steady_clock::now();
+
+     // std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "," << std::endl;
+
 
       sortedList_20.push_back(result_20);
       sortedList_5.push_back(result_5);
@@ -241,13 +259,17 @@ int main(int argc, char *argv[]) {
     qreal median = findMedian(sortedList, 0, count);
     qreal Q1 = findMedian(sortedList, 0, count / 2);
     qreal Q3 = findMedian(sortedList, count / 2 + (count % 2), count);
-    qreal IQR = Q3 - Q1;
+    qreal UE = Q3 + 1.5 * (Q3 - Q1);
+    qreal LE = sortedList.first();
 
     box_sync->setValue(QBoxSet::Median, median);
     box_sync->setValue(QBoxSet::LowerQuartile, Q1);
     box_sync->setValue(QBoxSet::UpperQuartile, Q3);
-    box_sync->setValue(QBoxSet::LowerExtreme, sortedList.first());
-    box_sync->setValue(QBoxSet::UpperExtreme, Q3 + 1.5 * IQR);
+    box_sync->setValue(QBoxSet::LowerExtreme, LE);
+    box_sync->setValue(QBoxSet::UpperExtreme, UE);
+
+
+
 
     plot_pos = plot_pos + 0.5;
 
@@ -257,12 +279,15 @@ int main(int argc, char *argv[]) {
     qreal median_5 = findMedian(sortedList_5, 0, count_5);
     qreal Q1_5 = findMedian(sortedList_5, 0, count_5 / 2);
     qreal Q3_5 = findMedian(sortedList_5, count_5 / 2 + (count_5 % 2), count_5);
-    qreal IQR_5 = Q3_5 - Q1_5;
+    qreal UE_5 = Q3_5 + 1.5 * (Q3_5 - Q1_5);
+    qreal LE_5 = sortedList_5.first();
+
+
     box_sync_5->setValue(QBoxSet::Median, median_5);
     box_sync_5->setValue(QBoxSet::LowerQuartile, Q1_5);
     box_sync_5->setValue(QBoxSet::UpperQuartile, Q3_5);
-    box_sync_5->setValue(QBoxSet::LowerExtreme, sortedList_5.first());
-    box_sync_5->setValue(QBoxSet::UpperExtreme, Q3_5 + 1.5 * IQR_5);
+    box_sync_5->setValue(QBoxSet::LowerExtreme, LE_5);
+    box_sync_5->setValue(QBoxSet::UpperExtreme, UE_5);
 
     plot_pos = plot_pos + 0.5;
 
@@ -273,18 +298,46 @@ int main(int argc, char *argv[]) {
     qreal Q1_20 = findMedian(sortedList_20, 0, count_20 / 2);
     qreal Q3_20 =
         findMedian(sortedList_20, count_20 / 2 + (count_20 % 2), count_20);
-    qreal IQR_20 = Q3_20 - Q1_20;
+    qreal UE_20 = Q3_20 + 1.5 * (Q3_20 - Q1_20);
+    qreal LE_20 = sortedList_20.first();
+
+
     box_sync_20->setValue(QBoxSet::Median, median_20);
     box_sync_20->setValue(QBoxSet::LowerQuartile, Q1_20);
     box_sync_20->setValue(QBoxSet::UpperQuartile, Q3_20);
-    box_sync_20->setValue(QBoxSet::LowerExtreme, sortedList_20.first());
-    box_sync_20->setValue(QBoxSet::UpperExtreme, Q3_20 + 1.5 * IQR_20);
-    ;
-    plot_pos = plot_pos + 1.0;
+    box_sync_20->setValue(QBoxSet::LowerExtreme, LE_20);
+    box_sync_20->setValue(QBoxSet::UpperExtreme, UE_20);
 
+    plot_pos = plot_pos + 1.0;
     sync_series->append(box_sync);
     sync_series_5->append(box_sync_5);
     sync_series_20->append(box_sync_20);
+
+
+    cout << "Disturbance 10%" << endl;
+    cout << "LowerExtreme:" << LE<< endl;
+    cout << "LowerQuartile:" << Q1  << endl;
+    cout << "Median:" << median << endl;
+    cout << "UpperQuartile:" << Q3 << endl;
+    cout << "UpperExtreme:" << UE  << endl;
+
+    cout << "-------------" << endl;
+
+    cout << "Disturbance 5%" << endl;
+    cout << "LowerExtreme:" << LE_5<< endl;
+    cout << "LowerQuartile:" << Q1_5  << endl;
+    cout << "Median:" << median_5 << endl;
+    cout << "UpperQuartile:" << Q3_5 << endl;
+    cout << "UpperExtreme:" << UE_5  << endl;
+    cout << "-------------" << endl;
+    cout << "Disturbance 2%" << endl;
+    cout << "LowerExtreme:" << LE_20<< endl;
+    cout << "LowerQuartile:" << Q1_20  << endl;
+    cout << "Median:" << median_20 << endl;
+    cout << "UpperQuartile:" << Q3_20 << endl;
+    cout << "UpperExtreme:" << UE_20  << endl;
+    cout << "-------------" << endl;
+    cout << "-------------" << endl;
   }
   QChart *chart = new QChart();
   chart->addSeries(sync_series_20);

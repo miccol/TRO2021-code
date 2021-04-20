@@ -220,7 +220,7 @@ double run_async_absolute_barriers(AbsoluteBarrier barrier, double a1, double w_
 int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
-    std::vector<double> num_of_children_values = {2, 4, 8, 16};
+    std::vector<double> num_of_children_values = {4, 8, 16, 32};
 
     QBoxPlotSeries *sync_series_005 = new QBoxPlotSeries();
     QBoxPlotSeries *sync_series_01 = new QBoxPlotSeries();
@@ -249,10 +249,10 @@ int main(int argc, char *argv[]) {
 
         std::cout << "5 barriers" << std::endl;
 
-        for(auto b : barrier_values)
-        {
-            std::cout << "b - " << b << std::endl;
-        }
+//        for(auto b : barrier_values)
+//        {
+//            std::cout << "b - " << b << std::endl;
+//        }
         AbsoluteBarrier barrier5(barrier_values);
 
         barrier_values.clear();
@@ -264,10 +264,10 @@ int main(int argc, char *argv[]) {
 
         std::cout << "10 barriers" << std::endl;
 
-        for(auto b : barrier_values)
-        {
-            std::cout << "b - " << b << std::endl;
-        }
+//        for(auto b : barrier_values)
+//        {
+//            std::cout << "b - " << b << std::endl;
+//        }
         AbsoluteBarrier barrier10(barrier_values);
 
         barrier_values.clear();
@@ -278,10 +278,10 @@ int main(int argc, char *argv[]) {
         barrier_values.push_back(1.0);
         std::cout << "20 barriers"  << std::endl;
 
-        for(auto b : barrier_values)
-        {
-            std::cout << "b - " << b << std::endl;
-        }
+//        for(auto b : barrier_values)
+//        {
+//            std::cout << "b - " << b << std::endl;
+//        }
         AbsoluteBarrier barrier20(barrier_values);
 
 
@@ -314,7 +314,7 @@ int main(int argc, char *argv[]) {
         QBoxSet *box_sync_1 = new QBoxSet(to_string(num_of_children).c_str());
 
         while (episode++ < 10) {
-            cout << "Episode = " << episode << endl;
+//            cout << "Episode = " << episode << endl;
 
             result_0 = run_async_absolute_barriers(barrier5, a1, w_max1, num_of_children);
             result_10 = run_absolute_barriers(barrier10, a1, w_max1, num_of_children);
@@ -333,13 +333,14 @@ int main(int argc, char *argv[]) {
         qreal median = findMedian(sortedList_005, 0, count);
         qreal Q1 = findMedian(sortedList_005, 0, count / 2);
         qreal Q3 = findMedian(sortedList_005, count / 2 + (count % 2), count);
-        qreal IQR = Q3 - Q1;
+        qreal UE = Q3 + 1.5 * (Q3 - Q1);
+        qreal LE = sortedList_005.first();
 
         box_sync_005->setValue(QBoxSet::Median, median);
         box_sync_005->setValue(QBoxSet::LowerQuartile, Q1);
         box_sync_005->setValue(QBoxSet::UpperQuartile, Q3);
-        box_sync_005->setValue(QBoxSet::LowerExtreme, sortedList_005.first());
-        box_sync_005->setValue(QBoxSet::UpperExtreme, Q3 + 1.5 * IQR);
+        box_sync_005->setValue(QBoxSet::LowerExtreme, LE);
+        box_sync_005->setValue(QBoxSet::UpperExtreme, UE);
 
         plot_pos = plot_pos + 0.5;
 
@@ -350,11 +351,15 @@ int main(int argc, char *argv[]) {
         qreal Q1_5 = findMedian(sortedList_01, 0, count_5 / 2);
         qreal Q3_5 = findMedian(sortedList_01, count_5 / 2 + (count_5 % 2), count_5);
         qreal IQR_5 = Q3_5 - Q1_5;
+        qreal UE_5 = Q3_5 + 1.5 * (Q3_5 - Q1_5);
+        qreal LE_5 = sortedList_01.first();
+
+
         box_sync_01->setValue(QBoxSet::Median, median_5);
         box_sync_01->setValue(QBoxSet::LowerQuartile, Q1_5);
         box_sync_01->setValue(QBoxSet::UpperQuartile, Q3_5);
-        box_sync_01->setValue(QBoxSet::LowerExtreme, sortedList_01.first());
-        box_sync_01->setValue(QBoxSet::UpperExtreme, Q3_5 + 1.5 * IQR_5);
+        box_sync_01->setValue(QBoxSet::LowerExtreme, LE_5);
+        box_sync_01->setValue(QBoxSet::UpperExtreme, UE_5);
 
         plot_pos = plot_pos + 0.5;
 
@@ -365,18 +370,48 @@ int main(int argc, char *argv[]) {
         qreal Q1_20 = findMedian(sortedList_1, 0, count_20 / 2);
         qreal Q3_20 =
                 findMedian(sortedList_1, count_20 / 2 + (count_20 % 2), count_20);
-        qreal IQR_20 = Q3_20 - Q1_20;
+        qreal UE_20 = Q3_20 + 1.5 * (Q3_20 - Q1_20);
+        qreal LE_20 = sortedList_1.first();
+
         box_sync_1->setValue(QBoxSet::Median, median_20);
         box_sync_1->setValue(QBoxSet::LowerQuartile, Q1_20);
         box_sync_1->setValue(QBoxSet::UpperQuartile, Q3_20);
-        box_sync_1->setValue(QBoxSet::LowerExtreme, sortedList_1.first());
-        box_sync_1->setValue(QBoxSet::UpperExtreme, Q3_20 + 1.5 * IQR_20);
+        box_sync_1->setValue(QBoxSet::LowerExtreme, LE_20);
+        box_sync_1->setValue(QBoxSet::UpperExtreme, UE_20);
         ;
         plot_pos = plot_pos + 1.0;
 
         sync_series_005->append(box_sync_005);
         sync_series_01->append(box_sync_01);
         sync_series_1->append(box_sync_1);
+
+
+
+        cout << "Disturbance 10%" << endl;
+        cout << "LowerExtreme:" << LE<< endl;
+        cout << "LowerQuartile:" << Q1  << endl;
+        cout << "Median:" << median << endl;
+        cout << "UpperQuartile:" << Q3 << endl;
+        cout << "UpperExtreme:" << UE  << endl;
+
+        cout << "-------------" << endl;
+
+        cout << "Disturbance 5%" << endl;
+        cout << "LowerExtreme:" << LE_5<< endl;
+        cout << "LowerQuartile:" << Q1_5  << endl;
+        cout << "Median:" << median_5 << endl;
+        cout << "UpperQuartile:" << Q3_5 << endl;
+        cout << "UpperExtreme:" << UE_5  << endl;
+        cout << "-------------" << endl;
+        cout << "Disturbance 2%" << endl;
+        cout << "LowerExtreme:" << LE_20<< endl;
+        cout << "LowerQuartile:" << Q1_20  << endl;
+        cout << "Median:" << median_20 << endl;
+        cout << "UpperQuartile:" << Q3_20 << endl;
+        cout << "UpperExtreme:" << UE_20  << endl;
+        cout << "-------------" << endl;
+        cout << "-------------" << endl;
+
     }
     QChart *chart = new QChart();
     chart->addSeries(sync_series_1);
@@ -398,7 +433,7 @@ int main(int argc, char *argv[]) {
     chart->addAxis(axisY, Qt::AlignLeft);
 
     chart->createDefaultAxes();
-    chart->axisX()->setTitleText("Value of Delta");
+    chart->axisX()->setTitleText("Number of Children");
     chart->axisY()->setTitleText("Progress Distance");
 
     QChartView *chartView = new QChartView(chart);
